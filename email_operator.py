@@ -36,7 +36,7 @@ start_task = PythonOperator(
 
 send_email = EmailOperator( 
     task_id='send_email', 
-    to='linapenguin@gmail.com', 
+    to='seohyunlim98@gmail.com', 
     subject='Alert Mail', 
     html_content=""" Mail Test """, 
     dag=dag_email)
