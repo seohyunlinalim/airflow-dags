@@ -6,9 +6,11 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.email import EmailOperator
 from airflow.sensors.python import PythonSensor
 from email_threads import check_for_response
+from jinja2 import Environment, FileSystemLoader
+import os
 
 receiver = 'seohyunlim98@gmail.com'
-subject = 'Alert Test Mail 7'
+subject = 'Alert Test Mail 8'
 
 default_args = { 
     # 'owner': 'airflow', 
@@ -39,11 +41,24 @@ start_task = PythonOperator(
     python_callable=start_task_func, 
     dag=dag_email) 
 
+
+current_directory = os.path.dirname(os.path.abspath(__file__))
+env = Environment(loader=FileSystemLoader(current_directory))
+
+def approve():
+    return env.get_template('approved_email.j2').render()
+
+def reject():
+    return env.get_template('rejected_email.j2').render()
+
 send_email = EmailOperator( 
     task_id='send_email', 
     to=receiver, 
     subject=subject, 
-    html_content=""" Mail Test """, 
+    html_content=env.get_template('email_template.j2').render(
+        approve=approve,
+        reject=reject
+    ), 
     dag=dag_email)
 
 start_task >> send_email
