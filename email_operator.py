@@ -8,7 +8,7 @@ from airflow.sensors.python import PythonSensor
 from email_threads import check_for_response
 
 receiver = 'seohyunlim98@gmail.com'
-subject = 'Alert Test Mail 4'
+subject = 'Alert Test Mail 5'
 
 default_args = { 
     # 'owner': 'airflow', 
