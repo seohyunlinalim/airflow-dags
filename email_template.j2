@@ -1,8 +1,15 @@
+<!DOCTYPE html>
 <html>
-    <head></head>
-    <body>
-        Would you like to approve?
-        <button onclick="approve()">Approve</button>
-        <button onclick="reject()">Reject</button>
-    </body>
+<body>
+
+<form action="action_page.php">
+  <fieldset>
+    <legend>Do you approve?</legend>
+    <label><input type="radio" name="radio" value="yes" /> Yes</label>
+    <label><input type="radio" name="radio" value="no" /> No</label>
+    <input type="submit" value="Submit" />
+  </fieldset>
+</form>
+
+</body>
 </html>

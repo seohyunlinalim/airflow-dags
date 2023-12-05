@@ -45,11 +45,11 @@ start_task = PythonOperator(
 current_directory = os.path.dirname(os.path.abspath(__file__))
 env = Environment(loader=FileSystemLoader(current_directory))
 
-def approve():
-    return env.get_template('approved_email.j2').render()
+# def approve():
+#     return env.get_template('approved_email.j2').render()
 
-def reject():
-    return env.get_template('rejected_email.j2').render()
+# def reject():
+#     return env.get_template('rejected_email.j2').render()
 
 send_email = EmailOperator( 
     task_id='send_email', 
