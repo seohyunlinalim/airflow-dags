@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 import os
 
 receiver = 'seohyunlim98@gmail.com'
-subject = 'Alert Test Mail 8'
+subject = 'Alert Test Mail 9'
 
 default_args = { 
     # 'owner': 'airflow', 
@@ -55,10 +55,7 @@ send_email = EmailOperator(
     task_id='send_email', 
     to=receiver, 
     subject=subject, 
-    html_content=env.get_template('email_template.j2').render(
-        approve=approve,
-        reject=reject
-    ), 
+    html_content=env.get_template('email_template.j2').render(), 
     dag=dag_email)
 
 start_task >> send_email
