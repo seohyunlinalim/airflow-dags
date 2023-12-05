@@ -18,7 +18,7 @@ def check_for_response(receiver, subject):
     TODO(developer) - See https://developers.google.com/identity
     for guides on implementing OAuth2 for the application.
     """
-    token = Variable.get("token-json", default_var=None)
+    token = Variable.get("token-json", deserialize_json=True, default_var=None)
     creds = Credentials.from_authorized_user_info(token, SCOPES)
 
     try:
