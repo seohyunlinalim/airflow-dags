@@ -1,4 +1,5 @@
 import os.path
+import os
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -16,24 +17,32 @@ def check_for_response(receiver, subject):
     TODO(developer) - See https://developers.google.com/identity
     for guides on implementing OAuth2 for the application.
     """
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
+    token = {"token": os.getenv("GMAIL_TOKEN"), 
+             "refresh_token": os.getenv("GMAIL_REFRESH_TOKEN"), 
+             "token_uri": "https://oauth2.googleapis.com/token", 
+             "client_id": os.getenv("GMAIL_CLIENT_ID"), 
+             "client_secret": os.getenv("GMAIL_CLIENT_SECRET"), 
+             "scopes": ["https://www.googleapis.com/auth/gmail.readonly"], 
+             "expiry": "2023-12-05T03:57:10.267738Z"}
+    creds = Credentials.from_authorized_user_info(token, SCOPES)
+    # creds = None
+    # # The file token.json stores the user's access and refresh tokens, and is
+    # # created automatically when the authorization flow completes for the first
+    # # time.
+    # if os.path.exists("token.json"):
+    #     creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    # # If there are no (valid) credentials available, let the user log in.
+    # if not creds or not creds.valid:
+    #     if creds and creds.expired and creds.refresh_token:
+    #         creds.refresh(Request())
+    #     else:
+    #         flow = InstalledAppFlow.from_client_secrets_file(
+    #             "credentials.json", SCOPES
+    #         )
+    #         creds = flow.run_local_server(port=0)
+    #     # Save the credentials for the next run
+    #     with open("token.json", "w") as token:
+    #         token.write(creds.to_json())
 
     try:
         # create gmail api client
@@ -62,12 +71,12 @@ def check_for_response(receiver, subject):
                         break
                 if subject:  # skip if no Subject line
                     print(f"- {subject}, {nmsgs}, {receiver}")
-                    return True
-            return False
+            #         return True
+            # return False
 
     except HttpError as error:
         print(f"An error occurred: {error}")
 
 
-# if __name__ == "__main__":
-#   check_for_response("seohyunlim98@gmail.com")
+if __name__ == "__main__":
+  check_for_response("seohyunlim98@gmail.com", "Test Mail")
