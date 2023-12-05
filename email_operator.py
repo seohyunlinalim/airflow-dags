@@ -4,8 +4,11 @@ from airflow import DAG
 from datetime import datetime, timedelta 
 from airflow.operators.python import PythonOperator 
 from airflow.operators.email import EmailOperator
-# from airflow.sensors.base import BaseSensorOperator
 from airflow.sensors.python import PythonSensor
+from email_threads import check_for_response
+
+receiver = 'seohyunlim98@gmail.com'
+subject = 'Alert Test Mail'
 
 default_args = { 
     # 'owner': 'airflow', 
@@ -38,23 +41,25 @@ start_task = PythonOperator(
 
 send_email = EmailOperator( 
     task_id='send_email', 
-    to='seohyunlim98@gmail.com', 
-    subject='Alert Mail', 
+    to=receiver, 
+    subject=subject, 
     html_content=""" Mail Test """, 
     dag=dag_email)
 
 start_task >> send_email
 
-# def response_callable():
-#     if True: # if email has been responded to,
-#         return True
+def response_callable():
+    if check_for_response(receiver, subject): # if an unread response exists
+        return True
+    return False
 
-# wait_for_email = PythonSensor(
-#     task_id='wait_for_response',
-#     python_callable=response_callable
-# )
+wait_for_email = PythonSensor(
+    task_id='wait_for_response',
+    python_callable=response_callable,
+    dag=dag_email
+)
     
-# send_email >> wait_for_email
+send_email >> wait_for_email
 
 if __name__ == "__main__": 
     dag_email.cli()
