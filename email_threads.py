@@ -18,13 +18,7 @@ def check_for_response(receiver, subject):
     TODO(developer) - See https://developers.google.com/identity
     for guides on implementing OAuth2 for the application.
     """
-    token = {"token": Variable.get("TOKEN", default_var=None), 
-             "refresh_token": Variable.get("REFRESH_TOKEN", default_var=None), 
-             "token_uri": "https://oauth2.googleapis.com/token", 
-             "client_id": Variable.get("CLIENT_ID", default_var=None), 
-             "client_secret": Variable.get("CLIENT_SECRET", default_var=None), 
-             "scopes": ["https://www.googleapis.com/auth/gmail.readonly"], 
-             "expiry": "2023-12-05T03:57:10.267738Z"}
+    token = Variable.get("token-json", default_var=None)
     creds = Credentials.from_authorized_user_info(token, SCOPES)
 
     try:
