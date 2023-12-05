@@ -6,11 +6,9 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.email import EmailOperator
 from airflow.sensors.python import PythonSensor
 from email_threads import check_for_response
-from jinja2 import Environment, FileSystemLoader
-import os
 
 receiver = 'seohyunlim98@gmail.com'
-subject = 'Alert Test Mail 9'
+subject = 'Alert Test Mail 10'
 
 default_args = { 
     # 'owner': 'airflow', 
@@ -41,27 +39,18 @@ start_task = PythonOperator(
     python_callable=start_task_func, 
     dag=dag_email) 
 
-
-current_directory = os.path.dirname(os.path.abspath(__file__))
-env = Environment(loader=FileSystemLoader(current_directory))
-
-# def approve():
-#     return env.get_template('approved_email.j2').render()
-
-# def reject():
-#     return env.get_template('rejected_email.j2').render()
-
 send_email = EmailOperator( 
     task_id='send_email', 
     to=receiver, 
     subject=subject, 
-    html_content=env.get_template('email_template.j2').render(), 
+    html_content=""" Do you approve? Reply "YES" or "NO". """
     dag=dag_email)
 
 start_task >> send_email
 
 def response_callable():
-    if check_for_response(receiver, subject): # if an unread response exists
+    response = check_for_response(receiver, subject)
+    if response == "YES" or response == "NO": # if email is responded to (unread response)
         return True
 
 wait_for_email = PythonSensor( # checks every minute (default)
@@ -71,6 +60,12 @@ wait_for_email = PythonSensor( # checks every minute (default)
 )
     
 send_email >> wait_for_email
+
+# def store_response():
+#     if response == f"YES":
+#         print(response)
+#     if response == f"NO":
+#         print(response)
 
 def end_task_func(): 
     print("task ended") 

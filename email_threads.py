@@ -5,6 +5,8 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import base64
+import re
 from airflow.models import Variable
 
 # If modifying these scopes, delete the file token.json.
@@ -55,18 +57,22 @@ def check_for_response(receiver, subject):
             nmsgs = len(tdata["messages"])
 
             if nmsgs > 1:
-                msg = tdata["messages"][0]["payload"]
+                sent_msg = tdata["messages"][0]["payload"]
+                rcvd_msg = tdata["messages"][1]["payload"]
                 subject = ""
                 receiver = ""
-                for header in msg["headers"]:
+                for header in sent_msg["headers"]:
                     if header["name"] == "Subject":
                         subject = header["value"]
                     if header["name"] == "To":
                         receiver = header["value"]
                         break
+                body = base64.b64decode(rcvd_msg["parts"][0]["body"]["data"], '-_').decode()
+                pattern = r"^[a-z].*(?:\r?\n(?!\r?\n).*)*"
+                body = re.match(pattern, f'{body}').group(0)
                 if subject:  # skip if no Subject line
-                    print(f"- {subject}, {nmsgs}, {receiver}")
-                    return True
+                    print(f"- {nmsgs} unread messages, subject: {subject}, to: {receiver}, body: {body}")
+                    return body
             return False
 
     except HttpError as error:
