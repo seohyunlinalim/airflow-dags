@@ -43,7 +43,7 @@ send_email = EmailOperator(
     task_id='send_email', 
     to=receiver, 
     subject=subject, 
-    html_content=""" Do you approve? Reply "YES" or "NO". """
+    html_content=""" Do you approve? Reply "YES" or "NO". """,
     dag=dag_email)
 
 start_task >> send_email
