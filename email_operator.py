@@ -63,10 +63,12 @@ send_email >> wait_for_email
 def end_task_func(): 
     print("task ended") 
 
-start_task = PythonOperator( 
+end_task = PythonOperator( 
     task_id='end_task', 
     python_callable=end_task_func, 
     dag=dag_email) 
+
+wait_for_email >> end_task
 
 if __name__ == "__main__": 
     dag_email.cli()
