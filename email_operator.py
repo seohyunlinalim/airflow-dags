@@ -8,7 +8,7 @@ from airflow.sensors.python import PythonSensor
 from email_threads import check_for_response
 
 receiver = 'seohyunlim98@gmail.com'
-subject = 'Alert Test Mail 6'
+subject = 'Alert Test Mail 7'
 
 default_args = { 
     # 'owner': 'airflow', 
@@ -52,13 +52,21 @@ def response_callable():
     if check_for_response(receiver, subject): # if an unread response exists
         return True
 
-wait_for_email = PythonSensor(
+wait_for_email = PythonSensor( # checks every minute (default)
     task_id='wait_for_response',
     python_callable=response_callable,
     dag=dag_email
 )
     
 send_email >> wait_for_email
+
+def end_task_func(): 
+    print("task ended") 
+
+start_task = PythonOperator( 
+    task_id='end_task', 
+    python_callable=end_task_func, 
+    dag=dag_email) 
 
 if __name__ == "__main__": 
     dag_email.cli()
