@@ -71,12 +71,12 @@ def check_for_response(receiver, subject):
                         break
                 if subject:  # skip if no Subject line
                     print(f"- {subject}, {nmsgs}, {receiver}")
-            #         return True
-            # return False
+                    return True
+            return False
 
     except HttpError as error:
         print(f"An error occurred: {error}")
 
 
-if __name__ == "__main__":
-  check_for_response("seohyunlim98@gmail.com", "Test Mail")
+# if __name__ == "__main__":
+#   check_for_response("seohyunlim98@gmail.com", "Test Mail")
