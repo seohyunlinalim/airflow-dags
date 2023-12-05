@@ -2,8 +2,10 @@ import airflow
 from datetime import timedelta 
 from airflow import DAG 
 from datetime import datetime, timedelta 
-from airflow.operators.python_operator import PythonOperator 
-from airflow.operators.email_operator import EmailOperator
+from airflow.operators.python import PythonOperator 
+from airflow.operators.email import EmailOperator
+# from airflow.sensors.base import BaseSensorOperator
+from airflow.sensors.python import PythonSensor
 
 default_args = { 
     # 'owner': 'airflow', 
@@ -19,7 +21,7 @@ default_args = {
     }
 
 dag_email = DAG( 
-    dag_id = 'emailoperator_demo', 
+    dag_id = 'email_operator', 
     default_args=default_args,
     schedule_interval='@once', 
     dagrun_timeout=timedelta(minutes=60), 
@@ -40,8 +42,19 @@ send_email = EmailOperator(
     subject='Alert Mail', 
     html_content=""" Mail Test """, 
     dag=dag_email)
+
+start_task >> send_email
+
+# def response_callable():
+#     if True: # if email has been responded to,
+#         return True
+
+# wait_for_email = PythonSensor(
+#     task_id='wait_for_response',
+#     python_callable=response_callable
+# )
     
-send_email.set_upstream(start_task) 
+# send_email >> wait_for_email
 
 if __name__ == "__main__": 
     dag_email.cli()
