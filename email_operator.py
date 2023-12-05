@@ -51,7 +51,6 @@ start_task >> send_email
 def response_callable():
     if check_for_response(receiver, subject): # if an unread response exists
         return True
-    return False
 
 wait_for_email = PythonSensor(
     task_id='wait_for_response',
