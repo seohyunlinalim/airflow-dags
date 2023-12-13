@@ -7,7 +7,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import base64
 import re
-from airflow.models import Variable
+# from airflow.models import Variable
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -68,8 +68,7 @@ def check_for_response(receiver, subject):
                         receiver = header["value"]
                         break
                 body = base64.b64decode(rcvd_msg["parts"][0]["body"]["data"], '-_').decode()
-                pattern = r"^[a-z].*(?:\r?\n(?!\r?\n).*)*"
-                body = re.match(pattern, f'{body}').group(0)
+                body = body.partition("\n")[0]
                 if subject:  # skip if no Subject line
                     print(f"- {nmsgs} unread messages, subject: {subject}, to: {receiver}, body: {body}")
                     return body
@@ -80,4 +79,4 @@ def check_for_response(receiver, subject):
 
 
 # if __name__ == "__main__":
-#   check_for_response("seohyunlim98@gmail.com", "Test Mail")
+#   check_for_response("seohyunlim98@gmail.com", "Alert Test Mail 11")
