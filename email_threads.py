@@ -1,4 +1,3 @@
-import os.path
 import os
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -6,8 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import base64
-import re
-# from airflow.models import Variable
+from airflow.models import Variable
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -79,4 +77,4 @@ def check_for_response(receiver, subject):
 
 
 # if __name__ == "__main__":
-#   check_for_response("seohyunlim98@gmail.com", "Alert Test Mail 11")
+#   check_for_response("seohyunlim98@gmail.com", "Alert Test Mail 12")
