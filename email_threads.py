@@ -58,7 +58,7 @@ def check_for_response(receiver, subject):
 
             if nmsgs > 1:
                 sent_msg = tdata["messages"][0]["payload"]
-                rcvd_msg = tdata["messages"][1]["payload"]
+                rcvd_msg = tdata["messages"][-1]["payload"]
                 subject = ""
                 receiver = ""
                 for header in sent_msg["headers"]:
