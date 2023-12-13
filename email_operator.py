@@ -49,7 +49,7 @@ send_email = EmailOperator(
 start_task >> send_email
 
 def response_callable():
-    if check_for_response(receiver, subject) == "YES" or check_for_response(receiver, subject) == "NO": # if email is responded to (unread response)
+    if check_for_response(receiver, subject):
         return True
 
 wait_for_email = PythonSensor( # checks every minute (default)

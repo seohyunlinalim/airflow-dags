@@ -69,7 +69,7 @@ def check_for_response(receiver, subject):
                 body = body.partition("\n")[0]
                 if subject:  # skip if no Subject line
                     print(f"- {nmsgs} unread messages, subject: {subject}, to: {receiver}, body: {body}")
-                    return body
+                    return True
             return False
 
     except HttpError as error:
